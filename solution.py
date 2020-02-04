@@ -95,7 +95,7 @@ def heur_alternate(state):
 
       smallDist = state.width + state.height
       for goalBox in state.storage:
-        dist = abs(goalBox[0]-box[0])+abs(goalBox[1]-box[1])
+        dist = abs(goalBox[0] - box[0]) + abs(goalBox[1] - box[1])
         if dist < smallDist:
           smallDist = dist
       totManDist += smallDist
@@ -103,7 +103,7 @@ def heur_alternate(state):
   for someRobot in state.robots:
     robotDistSmall = state.width+state.height
     for box in state.boxes:
-      robotDist = abs(someRobot[0]-box[0])+abs(someRobot[1]-box[1])
+      robotDist = abs(someRobot[0] - box[0]) + abs(someRobot[1] - box[1])
       if robotDist < robotDistSmall:
         robotDistSmall = robotDist
     totManDist += robotDistSmall
