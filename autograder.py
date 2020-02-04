@@ -162,7 +162,7 @@ if test_anytime_gbfs:
         index = i
       else:
         index = 0      
-      final.print_path()   
+      # final.print_path()   
       if final.gval <= len_benchmark[index] or len_benchmark[index] == -99:
         benchmark += 1
       solved += 1 

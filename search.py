@@ -328,7 +328,7 @@ class SearchEngine:
         if self.trace:
             print("   TRACE: Search Strategy: ", self.get_strategy())
             print("   TRACE: Initial State:", end="")
-            initState.print_state()
+            # initState.print_state()
         #END 
         self.open = Open(self.strategy)
 
@@ -450,7 +450,7 @@ class SearchEngine:
                 #BEGIN TRACING
                 if self.trace > 1:
                     print("   TRACE: Successor State:", end="")
-                    succ.print_state()
+                    # succ.print_state()
                     print("   TRACE: Heuristic Value:", heur_fn(succ))
 
                     if self.cycle_check == _CC_FULL and hash_state in self.cc_dictionary:

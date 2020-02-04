@@ -63,79 +63,42 @@ def heur_alternate(state):
 
   for box in state.boxes:
     if box not in state.storage:
-
-      #-----------------ALONG WALL BUT NO GOAL HERE-------------------#
-      if box[0] == 0 and goodAlongLeft == 0:
-        return  float('inf')
-      if box[0] == state.width-1 and goodAlongRight == 0:
-        return  float('inf')
-      if box[1] == 0 and goodAlongTop == 0:
-        return  float('inf')
-      if box[1] == state.height-1 and goodAlongBot == 0:
-        return  float('inf')
-
-      #-----------------IS STUCK BETWEEN OBS-------------------#
       x, y = box
       top = (x, y+1)
       bottom = (x, y-1)
       left = (x-1, y)
       right = (x+1, y)
-      
-      if top in state.obstacles and left in state.obstacles:
-        return float('inf') 
 
-      if top in state.obstacles and right in state.obstacles:
-        return float('inf')
+      #-----------------ALONG WALL BUT NO GOAL HERE-------------------#
+      if x == 0 and goodAlongLeft == 0:
+        return  float('inf')
+      if x == state.width-1 and goodAlongRight == 0:
+        return  float('inf')
+      if y == 0 and goodAlongTop == 0:
+        return  float('inf')
+      if y == state.height-1 and goodAlongBot == 0:
+        return  float('inf')
 
-      if bottom in state.obstacles and left in state.obstacles:
-        return float('inf')
+      #-----------------IS STUCK BETWEEN OBS OR WALL-------------------#
+      if top in state.obstacles or bottom in state.obstacles or y == 0 or y == state.height-1:
+        if  right in state.obstacles or left in state.obstacles or x == 0 or x == state.width-1:
+          return float('inf')
 
-      if bottom in state.obstacles and right in state.obstacles:
-        return float('inf')
+      #-----------------IS STUCK BETWEEN WALL AND BOX-------------------#
+      if x == 0 or x == state.width-1:
+        if top in state.boxes or bottom in state.boxes:
+          return float('inf')
 
-      if top in state.obstacles and left in state.boxes:
-        return float('inf') 
+      if y == 0 or  y == state.height-1:
+        if left in state.boxes or right in state.boxes:
+          return float('inf')
 
-      if top in state.obstacles and right in state.boxes:
-        return float('inf')
-
-      if bottom in state.obstacles and left in state.boxes:
-        return float('inf')
-
-      if bottom in state.obstacles and right in state.boxes:
-        return float('inf')
-
-      #-----------------IS STUCK BETWEEN WALL AND BOX OR OBS-------------------#
-      if x == 0 and (top in state.obstacles or top in state.boxes):
-        return float('inf')
-
-      if x == 0 and (bottom in state.obstacles or bottom in state.boxes):
-        return float('inf')
-
-      if x == state.width-1 and (top in state.obstacles or top in state.boxes):
-        return float('inf')
-
-      if x == state.width-1 and (bottom in state.obstacles or bottom in state.boxes):
-        return float('inf')
-
-      if y == 0 and (left in state.obstacles or left in state.boxes):
-        return float('inf')
-
-      if y == 0 and (right in state.obstacles or right in state.boxes):
-        return float('inf')
-
-      if y == state.height-1 and (left in state.obstacles or left in state.boxes):
-        return float('inf')
-
-      if y == state.height-1 and (right in state.obstacles or right in state.boxes):
-        return float('inf')
-
-    smallDist = state.width + state.height
-    for goalBox in state.storage:
-      dist = abs(goalBox[0]-box[0])+abs(goalBox[1]-box[1])
-      if dist < smallDist:
-        smallDist = dist
-    totManDist += smallDist
+      smallDist = state.width + state.height
+      for goalBox in state.storage:
+        dist = abs(goalBox[0]-box[0])+abs(goalBox[1]-box[1])
+        if dist < smallDist:
+          smallDist = dist
+      totManDist += smallDist
 
   for someRobot in state.robots:
     robotDistSmall = state.width+state.height
@@ -187,21 +150,20 @@ def anytime_weighted_astar(initial_state, heur_fn, weight=1., timebound = 10):
   result = se.search(timebound, costbound)
   if result == False:
     return result
-  endTime = os.times()[0]
-  timeLeft = timebound - (endTime - startTime)
+  timeLeft = timebound - (os.times()[0] - startTime)
   finalVal = result
 
   #if there is time left keep searching
   while timeLeft > 0:
     startTime = os.times()[0]
     result = se.search(timeLeft, costbound)
-    endTime = os.times()[0]
-    timeLeft -= endTime - startTime
+    timeLeft -= os.times()[0] - startTime
 
     if result != False:
       finalVal = result
       weight = weight * 0.6 #halve weight
       costbound = (result.gval, result.gval, result.gval)
+      # costbound = (float("inf"), float("inf"), result.gval)
     else:
       #print (finalVal.gval)
       return finalVal
@@ -224,25 +186,20 @@ def anytime_gbfs(initial_state, heur_fn, timebound = 10):
   result = se.search(timebound, costbound)
   if result == False:
     return result
-  endTime = os.times()[0]
-  timeLeft = timebound - (endTime - startTime)
+  timeLeft = timebound - (os.times()[0] - startTime)
   finalVal = result
-
-  # timeLeft = timebound
 
   while timeLeft > 0:
     startTime = os.times()[0]
     result = se.search(timeLeft, costbound)
-    endTime = os.times()[0]
-    timeLeft -= endTime - startTime
+    timeLeft -= os.times()[0] - startTime
     if result != False:
         finalVal = result
         costbound = (result.gval, result.gval, result.gval)
+        # costbound = (result.gval, float("inf"), float("inf"))
     else:
-      #print (finalVal.gval)
       return finalVal
 
-  #print (finalVal.gval)
   return finalVal
 
 

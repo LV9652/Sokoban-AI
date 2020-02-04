@@ -1,1 +1,20 @@
 /** WRITE YOUR TIPS IN THIS FILE **/
+
+In the alternative heuristic function:
+
+1. The current state is dead (unsolvable) when one of the following situations happen:
+(a) There exists a free box (not in storage) against a wall along which there is no empty strorage. 
+(b) There exists a free box stuck between a wall and an objection.
+(c) There exists a free box stuck between a wall and another box.
+If the state is dead, we set the heuristic to float("inf").
+
+2. If the current state is not dead, 
+we calculate the heuristic by adding up
+the sum of Manhattan distances between each box and their nearest storage and 
+the sum of Manhattan distances between each robots and their nearest box.
+
+
+In anytime weighted A* function: 
+
+3. wrapped_fval_function = (lambda sN: fval_function(sN, weight)), 
+where the weight = 0.6 * weight during every iteration.
