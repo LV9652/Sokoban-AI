@@ -101,7 +101,7 @@ def heur_alternate(state):
       totManDist += smallDist
 
   for someRobot in state.robots:
-    robotDistSmall = state.width+state.height
+    robotDistSmall = state.width + state.height
     for box in state.boxes:
       robotDist = abs(someRobot[0] - box[0]) + abs(someRobot[1] - box[1])
       if robotDist < robotDistSmall:

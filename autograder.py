@@ -85,6 +85,8 @@ if test_alternate:
 
   solved = 0; unsolved = []; benchmark = 12; timebound = 8 #time limit
   output = [20, 5, 29, 12, 13, -99, 18, 41, 16, -99, 42, 38, -99, 43, 37, -99, -99, -99, -99, -99]
+  out = []
+
   for i in range(0, len(PROBLEMS)): 
 
     print("*************************************")
@@ -96,15 +98,18 @@ if test_alternate:
     final = se.search(timebound)
 
     if final:
+      out.append(final.gval)
       #final.print_path()  
       solved += 1
     else:
       unsolved.append(i)
+      out.append(-1)
 
   print("\n*************************************")
   print("Of {} initial problems, {} were solved in less than {} seconds by this solver.".format(len(PROBLEMS), solved, timebound))
   print("Problems that remain unsolved in the set are Problems: {}".format(unsolved))
   print("The benchmark implementation solved {} out of {} practice problems given {} seconds.".format(benchmark,len(PROBLEMS),timebound))
+  print("output: " + str(out))
   print("*************************************\n")
   ##############################################################
   
@@ -148,6 +153,8 @@ if test_anytime_gbfs:
   print('Testing Anytime GBFS')
 
   solved = 0; unsolved = []; benchmark = 0; timebound = 8 #8 second time limit 
+  output = []
+
   for i in range(0, len(PROBLEMS)):
     print("*************************************")  
     print("PROBLEM {}".format(i))
@@ -157,7 +164,7 @@ if test_anytime_gbfs:
     final = anytime_gbfs(s0, heur_fn=heur_alternate, timebound=timebound)
 
     if final:
-      #output.append(final.gval)
+      output.append(final.gval)
       if i < len(len_benchmark):
         index = i
       else:
@@ -168,12 +175,14 @@ if test_anytime_gbfs:
       solved += 1 
     else:
       unsolved.append(i)  
+      output.append(-1)
 
   print("\n*************************************")  
   print("Of {} initial problems, {} were solved in less than {} seconds by this solver.".format(len(PROBLEMS), solved, timebound))  
   print("Of the {} problems that were solved, the cost of {} matched or outperformed the benchmark.".format(solved, benchmark))  
   print("Problems that remain unsolved in the set are Problems: {}".format(unsolved))  
   print("The benchmark implementation solved 12 out of the 20 practice problems given 8 seconds.")
+  print("output: " + str(output))
   print("*************************************\n") 
 
 if test_anytime_weighted_astar:
@@ -187,6 +196,8 @@ if test_anytime_weighted_astar:
   print('Testing Anytime Weighted A Star')
 
   solved = 0; unsolved = []; benchmark = 0; timebound = 8 #8 second time limit 
+  output = []
+
   for i in range(0, len(PROBLEMS)):
     print("*************************************")  
     print("PROBLEM {}".format(i))
@@ -196,6 +207,7 @@ if test_anytime_weighted_astar:
     final = anytime_weighted_astar(s0, heur_fn=heur_alternate, weight=weight, timebound=timebound)
 
     if final:
+      output.append(final.gval)
       if i < len(len_benchmark):
         index = i
       else:
@@ -206,12 +218,20 @@ if test_anytime_weighted_astar:
       solved += 1 
     else:
       unsolved.append(i)  
+      output.append(-1)
 
   print("\n*************************************")  
   print("Of {} initial problems, {} were solved in less than {} seconds by this solver.".format(len(PROBLEMS), solved, timebound))  
   print("Of the {} problems that were solved, the cost of {} matched or outperformed the benchmark.".format(solved, benchmark))  
   print("Problems that remain unsolved in the set are Problems: {}".format(unsolved))  
   print("The benchmark implementation solved 12 out of the 20 practice problems given 8 seconds.")
+  print("output: " + str(output))
   print("*************************************\n") 
   ##############################################################
+
+# [18, 5, 29, 18, 15, 54, 18, 41, 22, -1, -1, 41, 46, 39, 43, 104, -1, -1, -1, 169]
+# [16, 6, 21, 10, 8, 42, 16, 41, 16, -1, -1, 32, 36, 31, 34, 100, -1, -1, -1, 161]
+# [16, 6, 21, 10, 8, 33, 16, 41, 17, -1, 36, 29, 31, 31, 27, 78, -1, -1, -1, -1]
+
+
 
